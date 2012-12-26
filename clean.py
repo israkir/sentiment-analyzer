@@ -17,7 +17,7 @@ from collections import Counter, OrderedDict
 # Input functions
 def read_file(filename):
     try:
-        file = codecs.open(filename,'r','utf-8-sig')
+        file = codecs.open(filename,'r','utf8')
     except IOError:
         print "\"%s\" no such file exists." % filename
         return None
@@ -28,7 +28,7 @@ def read_file(filename):
 
 def read_file_into_list(filename):
     try:
-        file = codecs.open(filename, 'r', 'utf-8-sig')
+        file = codecs.open(filename, 'r', 'utf8')
     except IOError:
         print "\"%s\" no such file exists." % filename
         return None
@@ -39,15 +39,15 @@ def read_file_into_list(filename):
 
 # Output functions
 def print_unicode(text):
-    print unicode(text).encode('utf-8-sig')
+    print unicode(text).encode('utf8')
 
 def write_to_file(filename, text):
-    f = codecs.open(filename, 'w', 'utf-8-sig')
+    f = codecs.open(filename, 'w', 'utf8')
     f.write(text)
     f.close()
 
 def write_frequencies(filename, freq_list):
-    f = codecs.open(filename, 'w', 'utf-8-sig')
+    f = codecs.open(filename, 'w', 'utf8')
     d = OrderedDict(sorted(freq_list.items(), key=lambda t:t[1], reverse=True))
     f.write('Character\tFrequency\n')
     f.write('---------------------\n')
@@ -90,7 +90,7 @@ def main():
     if(len(sys.argv) == 3):
         input_file_name = sys.argv[1]
         stopword_file_name = sys.argv[2]
-        output_file_name = input_file_name + ".filtered"
+        output_file_name = input_file_name + '.filtered'
         word_freq_output = None
     elif(len(sys.argv) == 4):
         input_file_name = sys.argv[1]
