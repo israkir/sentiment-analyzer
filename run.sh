@@ -27,19 +27,19 @@ for file in $input_data_path/* ; do
    
     echo '\nConverting text to Simplified Chinese...\n\n'
     # First convert everything into Simplified Chinese
-    #opencc -i $file -o $output_path/${filename}.simplified -c $opencc_config_file_path
+    opencc -i $file -o $output_path/${filename}.simplified -c $opencc_config_file_path
     
     echo '\nSegmenting sentences into word chunks...\n\n'
     # Segment the data
-    #java -mx2g -cp $segmenter_path/seg.jar edu.stanford.nlp.ie.crf.CRFClassifier \
-    #    -sighanCorporaDict $segmenter_path/data \
-    #    -testFile $output_path/${filename}${simplified_ext} \
-    #    -inputEncoding UTF-8 \
-    #    -outputEncoding UTF-8 \
-    #    -sighanPostProcessing true \
-    #    -keepAllWhitespaces false \
-    #    -loadClassifier $segmenter_path/data/ctb.gz \
-    #    -serDictionary $segmenter_path/data/dict-chris6.ser.gz > $output_path/${filename}${segmented_ext}
+    java -mx2g -cp $segmenter_path/seg.jar edu.stanford.nlp.ie.crf.CRFClassifier \
+        -sighanCorporaDict $segmenter_path/data \
+        -testFile $output_path/${filename}${simplified_ext} \
+        -inputEncoding UTF-8 \
+        -outputEncoding UTF-8 \
+        -sighanPostProcessing true \
+        -keepAllWhitespaces false \
+        -loadClassifier $segmenter_path/data/ctb.gz \
+        -serDictionary $segmenter_path/data/dict-chris6.ser.gz > $output_path/${filename}${segmented_ext}
 
     echo '\nCleaning stopwords...\n\n'
     # Clean stopwords
