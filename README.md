@@ -29,20 +29,27 @@ Instructions
 Notes
 =====
 
-* Assuming your input file name is `dev.in`, these files will be generated in order in `data/output/` directory:
+1) Assuming your input file name is `dev.in`, these files will be generated in order in `data/output/` directory:
 
-  1) `dev.in.simplified`: Simplified Chinese version of `dev.in`.
-  2) `dev.in.segmented`: Word segmented version of `dev.in.simplified`.
-  3) `dev.in.pos_tagged`: POS tagged version of `dev.in.segmented`.
-  4) `dev.in.stopwords_cleaned`: Stopwords cleaned version of `dev.in.segmented`.
-  5) `dev.in.word_frequencies`: Single character frequencies of `dev.in.segmented`.
+  * `dev.in.simplified`: Simplified Chinese version of `dev.in`.
+  
+  * `dev.in.segmented`: Word segmented version of `dev.in.simplified`.
+  
+  * `dev.in.pos_tagged`: POS tagged version of `dev.in.segmented`.
+  
+  * `dev.in.stopwords_cleaned`: Stopwords cleaned version of `dev.in.segmented`.
+  
+  * `dev.in.word_frequencies`: Single character frequencies of `dev.in.segmented`.
 
 
 Input Format
 ============
 
 
-The first line is a positive integer `N` denoting the number of two-clause sentences. The following `3xN` lines are given.
+The first line is a positive integer `N` denoting the number of two-clause sentences. 
+
+The following `3xN` lines are given.
+
 Of each sentence, the first line is the first clause, and the second line is the second clause. The third line indicates the relation type between these two clauses.
 
 Sample
@@ -69,7 +76,7 @@ Sentiment polarity of the first clause
 Sentiment polarity of the second clause
 Sentiment polarity of the whole sentence
 
--1 denotes a Negative polarity, 0 denotes a Neutral polarity, and 1 denotes a Positive polarity.
+`-1` denotes `negative polarity`, `0` denotes `neutral polarity`, and `1` denotes `positive polarity`.
 
 Sample
 ------
