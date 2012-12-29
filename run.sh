@@ -15,6 +15,9 @@ opencc_config_file_path=/usr/lib/i386-linux-gnu/opencc/zhtw2zhcn_s.ini
 # stopword list path
 stopwords_file=data/stopwords.txt
 
+# sentiment lexicon files path
+lexicon_files_path=data/NTUSD
+
 # Output path
 output_path=data/output
 
@@ -23,6 +26,7 @@ segmented_ext=.segmented
 postag_ext=.pos_tagged
 cleaned_ext=.stopwords_cleaned
 freq_ext=.word_frequencies
+results_ext=.analysis_results
 
 
 for file in $input_data_path/* ; do
@@ -45,14 +49,19 @@ for file in $input_data_path/* ; do
         -loadClassifier $segmenter_path/data/ctb.gz \
         -serDictionary $segmenter_path/data/dict-chris6.ser.gz > $output_path/${filename}${segmented_ext}
 
-    echo '\nPOS tagging the words...\n\n'
-    java -mx2g -cp $pos_tagger_path/stanford-postagger.jar: edu.stanford.nlp.tagger.maxent.MaxentTagger \
-        -model $pos_tagger_path/models/chinese-distsim.tagger \
-        -outputFormat slashTags -tagSeparator \_ \
-        -textFile $output_path/${filename}${segmented_ext} > $output_path/${filename}${postag_ext}
+    #echo '\nPOS tagging the words...\n\n'
+    #java -mx2g -cp $pos_tagger_path/stanford-postagger.jar: edu.stanford.nlp.tagger.maxent.MaxentTagger \
+    #    -model $pos_tagger_path/models/chinese-distsim.tagger \
+    #    -outputFormat slashTags -tagSeparator \_ \
+    #    -textFile $output_path/${filename}${segmented_ext} > $output_path/${filename}${postag_ext}
 
-    echo '\nCleaning stopwords...\n\n'
     # Clean stopwords
-    python $output_path/${filename}${segmented_ext} $stopwords_file $output_path/${filename}${cleaned_ext} $output_path/${filename}${freq_ext}
+    # echo '\nCleaning stopwords...\n\n'
+    # python src/stopword_cleaner.py $output_path/${filename}${segmented_ext} $stopwords_file $output_path/${filename}${cleaned_ext} $output_path/${filename}${freq_ext}
+    
+    echo '\nAnalyzing sentiments...\n\n'
+    python src/sentiment_analyzer.py ${output_path}/${filename}${segmented_ext} ${output_path}/${filename}${results_ext} ${lexicon_files_path}/Positive_simp_UTF8.txt ${lexicon_files_path}/Negtive_simp_UTF8.txt 
+
+    echo '\nFinished!\n'
 
 done
