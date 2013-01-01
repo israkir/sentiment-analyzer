@@ -27,7 +27,8 @@ postag_ext=.pos_tagged
 cleaned_ext=.stopwords_cleaned
 freq_ext=.word_frequencies
 results_ext=.analysis_results
-
+probability_ext=.probability
+final_results_ext=.final_results
 
 for file in $input_data_path/* ; do
     filename=`basename $file`
@@ -35,19 +36,19 @@ for file in $input_data_path/* ; do
    
     echo '\nConverting text to Simplified Chinese...\n\n'
     # First convert everything into Simplified Chinese
-    opencc -i $file -o $output_path/${filename}.simplified -c $opencc_config_file_path
+    #opencc -i $file -o $output_path/${filename}.simplified -c $opencc_config_file_path
     
     echo '\nSegmenting sentences into word chunks...\n\n'
     # Segment the data
-    java -mx2g -cp $segmenter_path/seg.jar edu.stanford.nlp.ie.crf.CRFClassifier \
-        -sighanCorporaDict $segmenter_path/data \
-        -testFile $output_path/${filename}${simplified_ext} \
-        -inputEncoding UTF-8 \
-        -outputEncoding UTF-8 \
-        -sighanPostProcessing true \
-        -keepAllWhitespaces false \
-        -loadClassifier $segmenter_path/data/ctb.gz \
-        -serDictionary $segmenter_path/data/dict-chris6.ser.gz > $output_path/${filename}${segmented_ext}
+    #java -mx2g -cp $segmenter_path/seg.jar edu.stanford.nlp.ie.crf.CRFClassifier \
+    #    -sighanCorporaDict $segmenter_path/data \
+    #    -testFile $output_path/${filename}${simplified_ext} \
+    #    -inputEncoding UTF-8 \
+    #    -outputEncoding UTF-8 \
+    #    -sighanPostProcessing true \
+    #    -keepAllWhitespaces false \
+    #    -loadClassifier $segmenter_path/data/ctb.gz \
+    #    -serDictionary $segmenter_path/data/dict-chris6.ser.gz > $output_path/${filename}${segmented_ext}
 
     #echo '\nPOS tagging the words...\n\n'
     #java -mx2g -cp $pos_tagger_path/stanford-postagger.jar: edu.stanford.nlp.tagger.maxent.MaxentTagger \
@@ -60,7 +61,7 @@ for file in $input_data_path/* ; do
     # python src/stopword_cleaner.py $output_path/${filename}${segmented_ext} $stopwords_file $output_path/${filename}${cleaned_ext} $output_path/${filename}${freq_ext}
     
     echo '\nAnalyzing sentiments...\n\n'
-    python src/sentiment_analyzer.py ${output_path}/${filename}${segmented_ext} ${output_path}/${filename}${results_ext} ${lexicon_files_path}/Positive_simp_UTF8.txt ${lexicon_files_path}/Negtive_simp_UTF8.txt 
+    python src/sentiment_analyzer.py ${output_path}/${filename}${segmented_ext} ${output_path}/${filename}${results_ext} ${lexicon_files_path}/Positive_simp_UTF8.txt ${lexicon_files_path}/Negtive_simp_UTF8.txt ${output_path}/${filename}${probability_ext} ${output_path}/${filename}${final_results_ext} 
 
     echo '\nFinished!\n'
 
