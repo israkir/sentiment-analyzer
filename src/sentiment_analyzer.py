@@ -40,7 +40,6 @@ def train_sentiment_lexicons(pos_lexicons_filename, neg_lexicons_filename):
 
     return pos_lexicons, neg_lexicons
 
-
 def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, neg_lexicons):
     '''
     Analyzes the input file in given format and writes the
@@ -61,6 +60,7 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
     '''
     input_file = codecs.open(input_filename, 'r', 'utf8')
     output_file = codecs.open(output_filename, 'w', 'utf8')
+    
 
     total_sentences = input_file.readline().strip()
     output_file.write(total_sentences + '\n')
@@ -94,6 +94,109 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
     input_file.close()
     output_file.close()
 
+def analyze_whole_sentence_sentiment(output_filename, final_result_filename, probability_filename):
+
+    output_file = codecs.open(output_filename, 'r', 'utf8')
+    final_result_file = codecs.open(final_result_filename, 'w', 'utf8')
+
+    tem_dict, con_dict, com_dict, exp_dict = retrieve_probability_model(probability_filename)
+
+    total = output_file.readline().strip()
+
+    for i in range(int(total)):
+        p1 = output_file.readline().strip()
+        p1Token = returnToken(p1)
+        p2 = output_file.readline().strip()
+        p2Token = returnToken(p2)
+        rel = output_file.readline().strip()
+
+        p3 = getAllPolarity(p1Token, p2Token, rel, tem_dict, con_dict, com_dict, exp_dict)
+
+        final_result_file.write(p1+"\n")
+        final_result_file.write(p2+"\n")
+        final_result_file.write(p3+"\n")
+
+
+def retrieve_probability_model(probability_filename):
+    prob_file = codecs.open(probability_filename, 'r', 'utf8')
+
+    tem = {}
+    con = {}
+    com = {}
+    exp = {}
+
+    print "generate probability model:"
+
+    if prob_file.readline().strip() == "Temporal":
+        for i in range(27):
+            polarity = prob_file.readline().strip();
+            probability = prob_file.readline().strip();
+            tem[polarity] = probability;
+            #print 'tem['+polarity+']:'+str(probability)
+
+    if prob_file.readline().strip() == "Contingency":
+        for i in range(27):
+            polarity = prob_file.readline().strip();
+            probability = prob_file.readline().strip();
+            con[polarity] = probability;
+            #print 'con['+polarity+']:'+str(probability)
+
+    if prob_file.readline().strip() == "Comparison":
+        for i in range(27):
+            polarity = prob_file.readline().strip();
+            probability = prob_file.readline().strip();
+            com[polarity] = probability;
+            #print 'com['+polarity+']:'+str(probability)
+
+    if prob_file.readline().strip() == "Expansion":
+        for i in range(27):
+            polarity = prob_file.readline().strip();
+            probability = prob_file.readline().strip();
+            exp[polarity] = probability;
+            #print 'exp['+polarity+']:'+str(probability)
+
+    prob_file.close()
+
+    return tem, con, com, exp
+
+def getAllPolarity(p1, p2, relation, tem_dict, con_dict, com_dict, exp_dict):
+
+    #print p1+" / "+p2+" / "+relation
+    relArray = {}
+
+    if relation == "Temporal":
+        relArray = tem_dict
+    elif relation == "Contingency":
+        relArray = con_dict
+    elif relation == "Comparison":
+        relArray = com_dict
+    elif relation == "Expansion":
+        relArray = exp_dict
+
+    polarArray = ['+', 'x', '-']
+    rToken = '+'
+    probValue = 0
+    for p3 in polarArray:
+        polarity = p1+p2+p3
+        if relArray[polarity] > probValue:
+            probValue = relArray[polarity]
+            rToken = p3
+
+
+    if rToken == "+":
+        return "1"
+    elif rToken == "x":
+        return "0"
+    elif rToken == "-":
+        return "-1"
+
+def returnToken( s ):
+    if s == "1":
+        return "+"
+    elif s == "0":
+        return "x"
+    elif s == "-1":
+        return "-"
 
 def main():
     '''
@@ -103,6 +206,8 @@ def main():
     output_filepath = sys.argv[2]
     positive_lexicons_filepath = sys.argv[3]
     negative_lexicons_filepath = sys.argv[4]
+    probability_filepath = sys.argv[5]
+    final_result_filepath = sys.argv[6]
     
     print 'Training positive and negative sentiment lexicons...'
     pos_lexicons_dict, neg_lexicons_dict = train_sentiment_lexicons(positive_lexicons_filepath, negative_lexicons_filepath)
@@ -110,6 +215,8 @@ def main():
     print 'Analyzing sentence sentiments from the input file...'
     analyze_sentence_sentiment(input_filepath, output_filepath, pos_lexicons_dict, neg_lexicons_dict)
 
+    print 'Analyzing whole sentence sentiment...'
+    analyze_whole_sentence_sentiment(output_filepath, final_result_filepath, probability_filepath)
 
 if __name__ == '__main__':
     main()
