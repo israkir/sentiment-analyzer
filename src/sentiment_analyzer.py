@@ -39,9 +39,37 @@ def train_sentiment_lexicons(pos_lexicons_filename, neg_lexicons_filename):
     neg_file.close()
 
     return pos_lexicons, neg_lexicons
+    
+def one_step_neighboring(strn_lexicons_filename, nega_lexicons_filename):
+    '''
+    Assigns the sentiment polarity for each lexicons.
+    Returns positive lexicons and negative lexicons in dictionary format.
+    '''
+    pos_lexicons = {}
+    neg_lexicons = {}
+
+    strn_file = codecs.open(strn_lexicons_filename, 'r', 'utf8')
+    nega_file = codecs.open(nega_lexicons_filename, 'r', 'utf8')
+
+    for i in range(0, 20):
+        s = strn_file.readline().strip('\n').encode('utf-8')
+        if not s:
+            break
+        strn_lexicons[s] = 1
+
+    for i in range(0, 25):
+        s = nega_file.readline().strip('\n').encode('utf-8')
+        if not s:
+            break
+        nega_lexicons[s] = -1
+
+    strn_file.close()
+    nega_file.close()
+
+    return strn_lexicons, nega_lexicons
 
 
-def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, neg_lexicons):
+def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, neg_lexicons, strn_lexicons, nega_lexicons):
     '''
     Analyzes the input file in given format and writes the
     analysis results to an output file.
@@ -76,13 +104,30 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
         # analyze each clause in the sentence
         else:
             score = 0
-            for word in line.split():
+            #for word in line.split():
+            words = line.split()
+            for i in range(0, len(words)):
+                word = words[i]
+                word_score = 0
                 if word in pos_lexicons:
                     #print 'pos found: %s' % word
-                    score += 1
+                    #score += 1
+                    word_score = 1
                 elif word in neg_lexicons:
                     #print 'neg found: %s' % word
-                    score -= 1
+                    #score -= 1
+                    word_score = 1
+                if i > 0:
+                    if word[i-1] in nega_lexicons:
+                        word_score *= -1
+                    if word[i-1] in strn_lexicons:
+                        word_score *= 2
+                if i < len(words)-1:
+                    if word[i+1] in nega_lexicons:
+                        word_score *= -1
+                    if word[i+1] in strn_lexicons:
+                        word_score *= 2
+                score += word_score
             
             if score > 0:
                 output_file.write('1\n')
@@ -103,12 +148,17 @@ def main():
     output_filepath = sys.argv[2]
     positive_lexicons_filepath = sys.argv[3]
     negative_lexicons_filepath = sys.argv[4]
+    strenghthening_lexicons_filepath = sys.argv[3]
+    negation_lexicons_filepath = sys.argv[4]
     
     print 'Training positive and negative sentiment lexicons...'
     pos_lexicons_dict, neg_lexicons_dict = train_sentiment_lexicons(positive_lexicons_filepath, negative_lexicons_filepath)
+    
+    print "loading strenghtening and nagation lexicons"
+    strn_lexicons_dict, nega_lexicons_dict = one_step_neighboring(strenghthening_lexicons_filepath, negation_lexicons_filepath)
 
     print 'Analyzing sentence sentiments from the input file...'
-    analyze_sentence_sentiment(input_filepath, output_filepath, pos_lexicons_dict, neg_lexicons_dict)
+    analyze_sentence_sentiment(input_filepath, output_filepath, pos_lexicons_dict, neg_lexicons_dict, strn_lexicons_dict, nega_lexicons_dict)
 
 
 if __name__ == '__main__':
