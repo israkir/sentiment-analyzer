@@ -27,15 +27,10 @@ Notes
 =====
 
 1. Assuming your input file name is `dev.in`, these files will be generated in order in `data/output/` directory:
-
   * `dev.in.simplified`: Simplified Chinese version of `dev.in`.
-  
-  * `dev.in.segmented`: Word segmented version of `dev.in.simplified`.
-  
+  * `dev.in.segmented`: Word segmented version of `dev.in.simplified`. 
   * `dev.in.analysis_results`: All sentiment analysis results computed from `dev.in.segmented` with punctuations cleaned.
-
 2. There is a file `data/trained_sentence_probabilities`  which contains the sentence probabilities for different clause relations trained from the `dev.in` and its correct output. It must be one of inputs of `src/sentiment_analyzer/py` which is set in `run.sh`.
-
 3. There is a stopwords list included in `data/stopwords.txt` which are not used in the current codebase. It might be used for larger input data to improve performance later in the future.
 
 
