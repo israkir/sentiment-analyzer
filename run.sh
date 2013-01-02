@@ -28,7 +28,7 @@ cleaned_ext=.stopwords_cleaned
 freq_ext=.word_frequencies
 results_ext=.analysis_results
 probability_ext=.probability
-final_results_ext=.final_results
+
 
 for file in $input_data_path/* ; do
     filename=`basename $file`
@@ -55,7 +55,7 @@ for file in $input_data_path/* ; do
     # python src/stopword_cleaner.py $output_path/${filename}${segmented_ext} $stopwords_file $output_path/${filename}${cleaned_ext} $output_path/${filename}${freq_ext}
     
     echo '\nAnalyzing sentiments...\n\n'
-    python src/sentiment_analyzer.py ${output_path}/${filename}${segmented_ext} ${output_path}/${filename}${results_ext} ${lexicon_files_path}/Positive_simp_UTF8.txt ${lexicon_files_path}/Negtive_simp_UTF8.txt ${output_path}/${filename}${probability_ext} ${output_path}/${filename}${final_results_ext} 
+    python src/sentiment_analyzer.py ${output_path}/${filename}${segmented_ext} ${output_path}/${filename}${results_ext} ${lexicon_files_path}/Positive_simp_UTF8.txt ${lexicon_files_path}/Negtive_simp_UTF8.txt ${output_path}/${filename}${probability_ext}  
 
     echo '\nFinished!\n'
 
