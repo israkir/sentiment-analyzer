@@ -82,7 +82,7 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
         # write the score for whole sentences
         if (i % 3) == 2:
             p3 = getAllPolarity(p1, p2, line, tem_dict, con_dict, com_dict, exp_dict)
-            output_file.write(p3 + '\n')
+            output_file.write(unicode(p3, 'utf-8') + u'\n')
         
         # analyze each clause in the sentence
         else:
@@ -97,13 +97,13 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
                     score -= 1
                 
             if score > 0:
-                output_file.write('1\n')
+                output_file.write(u'1\n')
                 token = '+'
             elif score < 0:
-                output_file.write('-1\n')
+                output_file.write(u'-1\n')
                 token = '-'
             else:
-                output_file.write('0\n')
+                output_file.write(u'0\n')
                 token = 'x'
 
             if (i % 3) == 0:

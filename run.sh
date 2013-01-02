@@ -7,7 +7,7 @@ input_data_path=data/input
 segmenter_path=lib/stanford-segmenter-2012-11-11
 
 # opencc config file path
-opencc_config_file_path=/usr/share/opencc/zhtw2zhcn_s.ini
+opencc_config_file_path=/usr/lib/i386-linux-gnu/opencc/zhtw2zhcn_s.ini
 
 # stopword list path
 stopwords_file=data/stopwords.txt
