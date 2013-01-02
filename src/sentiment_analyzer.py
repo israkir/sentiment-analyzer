@@ -40,7 +40,7 @@ def train_sentiment_lexicons(pos_lexicons_filename, neg_lexicons_filename):
 
     return pos_lexicons, neg_lexicons
 
-def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, neg_lexicons):
+def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, neg_lexicons, probability_filename):
     '''
     Analyzes the input file in given format and writes the
     analysis results to an output file.
@@ -61,9 +61,14 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
     input_file = codecs.open(input_filename, 'r', 'utf8')
     output_file = codecs.open(output_filename, 'w', 'utf8')
     
-
     total_sentences = input_file.readline().strip()
-    output_file.write(total_sentences + '\n')
+    #output_file.write(total_sentences + '\n')
+
+    # retrieve the probability model
+    tem_dict, con_dict, com_dict, exp_dict = retrieve_probability_model(probability_filename)
+
+    p1=''
+    p2=''
 
     for i in range(3 * int(total_sentences)):
         line = input_file.readline().strip('\n')
@@ -71,11 +76,14 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
         # TODO: Hung-Chi: write the score for whole sentences
         if (i % 3) == 2:
             # temporarily write the relation (line = Expansion etc..)
-            output_file.write(line + '\n')
+            p3 = getAllPolarity(p1, p2, line, tem_dict, con_dict, com_dict, exp_dict)
+            output_file.write(p3+'\n')
+            #output_file.write(line + '\n')
         
         # analyze each clause in the sentence
         else:
             score = 0
+            token = '';
             for word in line.split():
                 if word in pos_lexicons:
                     #print 'pos found: %s' % word
@@ -86,36 +94,21 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
             
             if score > 0:
                 output_file.write('1\n')
+                token = '+'
             elif score < 0:
                 output_file.write('-1\n')
+                token = '-'
             else:
                 output_file.write('0\n')
+                token = 'x'
+
+            if (i % 3) == 0:
+                p1 = token
+            elif (i % 3) == 1:
+                p2 = token
                 
     input_file.close()
     output_file.close()
-
-def analyze_whole_sentence_sentiment(output_filename, final_result_filename, probability_filename):
-
-    output_file = codecs.open(output_filename, 'r', 'utf8')
-    final_result_file = codecs.open(final_result_filename, 'w', 'utf8')
-
-    tem_dict, con_dict, com_dict, exp_dict = retrieve_probability_model(probability_filename)
-
-    total = output_file.readline().strip()
-
-    for i in range(int(total)):
-        p1 = output_file.readline().strip()
-        p1Token = returnToken(p1)
-        p2 = output_file.readline().strip()
-        p2Token = returnToken(p2)
-        rel = output_file.readline().strip()
-
-        p3 = getAllPolarity(p1Token, p2Token, rel, tem_dict, con_dict, com_dict, exp_dict)
-
-        final_result_file.write(p1+"\n")
-        final_result_file.write(p2+"\n")
-        final_result_file.write(p3+"\n")
-
 
 def retrieve_probability_model(probability_filename):
     prob_file = codecs.open(probability_filename, 'r', 'utf8')
@@ -125,7 +118,7 @@ def retrieve_probability_model(probability_filename):
     com = {}
     exp = {}
 
-    print "generate probability model:"
+    #print "generate probability model:"
 
     if prob_file.readline().strip() == "Temporal":
         for i in range(27):
@@ -190,14 +183,6 @@ def getAllPolarity(p1, p2, relation, tem_dict, con_dict, com_dict, exp_dict):
     elif rToken == "-":
         return "-1"
 
-def returnToken( s ):
-    if s == "1":
-        return "+"
-    elif s == "0":
-        return "x"
-    elif s == "-1":
-        return "-"
-
 def main():
     '''
     Main procedure drives the whole analysis process.
@@ -207,16 +192,12 @@ def main():
     positive_lexicons_filepath = sys.argv[3]
     negative_lexicons_filepath = sys.argv[4]
     probability_filepath = sys.argv[5]
-    final_result_filepath = sys.argv[6]
     
     print 'Training positive and negative sentiment lexicons...'
     pos_lexicons_dict, neg_lexicons_dict = train_sentiment_lexicons(positive_lexicons_filepath, negative_lexicons_filepath)
 
     print 'Analyzing sentence sentiments from the input file...'
-    analyze_sentence_sentiment(input_filepath, output_filepath, pos_lexicons_dict, neg_lexicons_dict)
-
-    print 'Analyzing whole sentence sentiment...'
-    analyze_whole_sentence_sentiment(output_filepath, final_result_filepath, probability_filepath)
+    analyze_sentence_sentiment(input_filepath, output_filepath, pos_lexicons_dict, neg_lexicons_dict, probability_filepath)
 
 if __name__ == '__main__':
     main()
