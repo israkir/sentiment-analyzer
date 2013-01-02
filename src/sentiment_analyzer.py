@@ -21,9 +21,6 @@ def train_sentiment_lexicons(pos_lexicons_filename, neg_lexicons_filename):
     Assigns the sentiment polarity for each lexicons.
     Returns positive lexicons and negative lexicons in dictionary format.
     '''
-    pos_lexicons = {}
-    neg_lexicons = {}
-
     pos_file = codecs.open(pos_lexicons_filename, 'r', 'utf-8')
     neg_file = codecs.open(neg_lexicons_filename, 'r', 'utf-8')
 
@@ -66,13 +63,11 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
     If score < 0, then clause polarity is -1,
     If score = 0, then clause polarity is 0.
     
-    TODO: Hung-Chi: Explain sentence polarity part here!
     '''
     input_file = codecs.open(input_filename, 'r', 'utf-8')
     output_file = codecs.open(output_filename, 'w', 'utf-8')
     
     total_sentences = input_file.readline().strip()
-    #output_file.write(total_sentences + '\n')
 
     # retrieve the probability model
     tem_dict, con_dict, com_dict, exp_dict = retrieve_probability_model(probability_filename)
@@ -128,8 +123,6 @@ def retrieve_probability_model(probability_filename):
     com = {}
     exp = {}
 
-    #print "generate probability model:"
-
     if prob_file.readline().strip() == "Temporal":
         for i in range(27):
             polarity = prob_file.readline().strip();
@@ -164,8 +157,6 @@ def retrieve_probability_model(probability_filename):
 
 
 def getAllPolarity(p1, p2, relation, tem_dict, con_dict, com_dict, exp_dict):
-
-    #print p1+" / "+p2+" / "+relation
     relArray = {}
 
     if relation == "Temporal":
@@ -205,15 +196,11 @@ def main():
     probability_filepath = sys.argv[5]
 
     print 'Training positive and negative sentiment lexicons...'
-    pos_lexicons_dict, neg_lexicons_dict = train_sentiment_lexicons(positive_lexicons_filepath, negative_lexicons_filepath)
+    pos_lexicons, neg_lexicons = train_sentiment_lexicons(positive_lexicons_filepath, negative_lexicons_filepath)
 
     print 'Analyzing sentence sentiments from the input file...'
-    analyze_sentence_sentiment(input_filepath, output_filepath, pos_lexicons_dict, neg_lexicons_dict, probability_filepath)
+    analyze_sentence_sentiment(input_filepath, output_filepath, pos_lexicons, neg_lexicons, probability_filepath)
 
-    #for p in pos_lexicons_dict:
-    #    print 'p: %s | %s' % (p, type(p))
-
-    #print pos_lexicons_dict
 
 if __name__ == '__main__':
     main()

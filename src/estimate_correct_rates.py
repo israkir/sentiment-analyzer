@@ -1,6 +1,6 @@
 import sys
 
-resultOutFile = file('data/output/dev.out' , 'r') # real results
+resultOutFile = file('data/dev.in.real_results' , 'r') # real results
 testOutFile = file('data/output/dev.in.analysis_results' , 'r') # our results
 
 totalNum = 0
@@ -36,16 +36,18 @@ correctRateClause1 = float(correctNumClause1)/float(totalNum)
 correctRateClause2 = float(correctNumClause2)/float(totalNum)
 correctRateEverything = float(correctNumEverything)/float(totalNum)
 
-
-print "correctNum for clause1: "+str(correctNumClause1)
-print "correct RATE for clause1: "+str(correctRateClause1)
-
-print "correctNum for clause2: "+str(correctNumClause2)
-print "correct RATE for clause2: "+str(correctRateClause2)
-
-print "correctNum for everything together: "+str(correctNumEverything)
-print "correct RATE for everything together: "+str(correctRateEverything)
-
-print "correctNum for sentence: "+str(correctNum)
-print "totalNum for sentence: "+str(totalNum)
-print "correct RATE for sentence: "+str(correctRate)
+print
+print "total # of sentences: " + str(totalNum)
+print
+print "# of first clause polarity is correct: " + str(correctNumClause1)
+print "correctness rate for clause1 polarity: " + str(correctRateClause1)
+print
+print "# of second clause polarity is correct: " + str(correctNumClause2)
+print "correctness rate for everything together polarity: " + str(correctRateEverything)
+print
+print "# of sentence polarity is correct: " + str(correctNum)
+print "correctness rate for clause2 polarity: " + str(correctRateClause2)
+print
+print "# of first clause and second clause and sentence polarity all together are correct: " + str(correctNumEverything)
+print "correctness rate for sentence polarity: " + str(correctRate)
+print
