@@ -7,11 +7,10 @@ This project aims to implement sentiment orientation analyzer for discourse rela
 Dependencies
 ============
 
-1. `opencc` package (v0.3.0) for Simplified-Traditional Chinese conversion..
+1. `opencc` package (v0.3.0) for Simplified-Traditional Chinese conversion.
 2. `stanford-segmenter` package (2012-11-11) for segmenting Simplified Chinese sentences.
-3. `stanford-postagger` package (2012-11-11) for POS tagging Chinese words.
 
-Note: `stanford-segmenter` and `stanford-postagger` is included in `lib/` directory. It is suggested to install `opencc` via your linux distribution package manager.
+Note: `stanford-segmenter` is included in `lib/` directory. It is suggested to install `opencc` via your linux distribution package manager.
 
 
 Instructions
@@ -23,23 +22,21 @@ Instructions
 
 2. Put your input file into `data/input/` folder.
 
-3. Stopwords are included in `data/stopwords.txt` file. You can tweak it according to your need.
-
 
 Notes
 =====
 
-1) Assuming your input file name is `dev.in`, these files will be generated in order in `data/output/` directory:
+1. Assuming your input file name is `dev.in`, these files will be generated in order in `data/output/` directory:
 
   * `dev.in.simplified`: Simplified Chinese version of `dev.in`.
   
   * `dev.in.segmented`: Word segmented version of `dev.in.simplified`.
   
-  * `dev.in.pos_tagged`: POS tagged version of `dev.in.segmented`.
-  
-  * `dev.in.stopwords_cleaned`: Stopwords cleaned version of `dev.in.segmented`.
-  
-  * `dev.in.word_frequencies`: Single character frequencies of `dev.in.segmented`.
+  * `dev.in.analysis_results`: All sentiment analysis results computed from `dev.in.segmented` with punctuations cleaned.
+
+2. There is a file `data/trained_sentence_probabilities`  which contains the sentence probabilities for different clause relations trained from the `dev.in` and its correct output. It must be one of inputs of `src/sentiment_analyzer/py` which is set in `run.sh`.
+
+3. There is a stopwords list included in `data/stopwords.txt` which are not used in the current codebase. It might be used for larger input data to improve performance later in the future.
 
 
 Input Format
