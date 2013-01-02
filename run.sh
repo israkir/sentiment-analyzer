@@ -50,10 +50,6 @@ for file in $input_data_path/* ; do
         -loadClassifier $segmenter_path/data/ctb.gz \
         -serDictionary $segmenter_path/data/dict-chris6.ser.gz > $output_path/${filename}${segmented_ext}
 
-    # Clean stopwords
-    # echo '\nCleaning stopwords...\n\n'
-    # python src/stopword_cleaner.py $output_path/${filename}${segmented_ext} $stopwords_file $output_path/${filename}${cleaned_ext} $output_path/${filename}${freq_ext}
-    
     echo '\nAnalyzing sentiments...\n\n'
     python src/sentiment_analyzer.py ${output_path}/${filename}${segmented_ext} ${output_path}/${filename}${results_ext} ${lexicon_files_path}/Positive_simp_UTF8.txt ${lexicon_files_path}/Negtive_simp_UTF8.txt ${output_path}/${filename}${probability_ext}  
 

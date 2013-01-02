@@ -40,6 +40,14 @@ def train_sentiment_lexicons(pos_lexicons_filename, neg_lexicons_filename):
 
     return pos_lexicons, neg_lexicons
 
+
+def filter_punctuation(text):
+    punctuations = u"。「」.,﹁﹂“”、·《》—～；？——!！\"%$'&)(+*-/.;:=<?>@[]\\_^`{}|~\#"
+    translate_table = dict((ord(char), None) for char in punctuations)
+    
+    return text.translate(translate_table)
+
+
 def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, neg_lexicons, probability_filename):
     '''
     Analyzes the input file in given format and writes the
@@ -67,18 +75,19 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
     # retrieve the probability model
     tem_dict, con_dict, com_dict, exp_dict = retrieve_probability_model(probability_filename)
 
-    p1=''
-    p2=''
+    p1 = ''
+    p2 = ''
 
     for i in range(3 * int(total_sentences)):
         line = input_file.readline().strip('\n')
+        line = filter_punctuation(line)
 
-        # TODO: Hung-Chi: write the score for whole sentences
+        print 'line: %s' % line
+
+        # write the score for whole sentences
         if (i % 3) == 2:
-            # temporarily write the relation (line = Expansion etc..)
             p3 = getAllPolarity(p1, p2, line, tem_dict, con_dict, com_dict, exp_dict)
-            output_file.write(p3+'\n')
-            #output_file.write(line + '\n')
+            output_file.write(p3 + '\n')
         
         # analyze each clause in the sentence
         else:
@@ -109,6 +118,7 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
                 
     input_file.close()
     output_file.close()
+
 
 def retrieve_probability_model(probability_filename):
     prob_file = codecs.open(probability_filename, 'r', 'utf8')
@@ -152,6 +162,7 @@ def retrieve_probability_model(probability_filename):
 
     return tem, con, com, exp
 
+
 def getAllPolarity(p1, p2, relation, tem_dict, con_dict, com_dict, exp_dict):
 
     #print p1+" / "+p2+" / "+relation
@@ -175,13 +186,13 @@ def getAllPolarity(p1, p2, relation, tem_dict, con_dict, com_dict, exp_dict):
             probValue = relArray[polarity]
             rToken = p3
 
-
     if rToken == "+":
         return "1"
     elif rToken == "x":
         return "0"
     elif rToken == "-":
         return "-1"
+
 
 def main():
     '''
