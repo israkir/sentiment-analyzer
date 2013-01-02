@@ -9,7 +9,7 @@ correctNumClause1 = 0
 correctNumClause2 = 0
 correctNumEverything = 0
 
-for i in range(15000):
+for i in range(5000):
     r1 = resultOutFile.readline().strip()
     r2 = resultOutFile.readline().strip()
     rOut = resultOutFile.readline().strip()
