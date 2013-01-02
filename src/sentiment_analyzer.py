@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # --------------------------------------------------------------------------------------------------------------------
 #
@@ -24,16 +24,18 @@ def train_sentiment_lexicons(pos_lexicons_filename, neg_lexicons_filename):
     pos_lexicons = {}
     neg_lexicons = {}
 
-    pos_file = codecs.open(pos_lexicons_filename, 'r', 'utf8')
-    neg_file = codecs.open(neg_lexicons_filename, 'r', 'utf8')
+    pos_file = codecs.open(pos_lexicons_filename, 'r', 'utf-8')
+    neg_file = codecs.open(neg_lexicons_filename, 'r', 'utf-8')
 
+    pos_lexicons = []
     for i in range(9365):
-        s = pos_file.readline().strip('\n').encode('utf-8')
-        pos_lexicons[s] = 1
+        s = pos_file.readline().strip()
+        pos_lexicons.append(s)
 
+    neg_lexicons = []
     for i in range(11230):
-        s = neg_file.readline().strip('\n').encode('utf-8')
-        neg_lexicons[s] = -1
+        s = neg_file.readline().strip()
+        neg_lexicons.append(s)
 
     pos_file.close()
     neg_file.close()
@@ -42,7 +44,7 @@ def train_sentiment_lexicons(pos_lexicons_filename, neg_lexicons_filename):
 
 
 def filter_punctuation(text):
-    punctuations = u"。「」.,﹁﹂“”、·《》—～；：？——!！\"%$'&)(+*-/.;:=<?>@[]\\_^`{}|~\#"
+    punctuations = u"。「」.・,﹁﹂“”、·《》—～；：？——!！\"%$'&)(+*-/.;:=<?>@[]\\_^`{}|~\#"
     translate_table = dict((ord(char), None) for char in punctuations)
     
     return text.translate(translate_table)
@@ -66,8 +68,8 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
     
     TODO: Hung-Chi: Explain sentence polarity part here!
     '''
-    input_file = codecs.open(input_filename, 'r', 'utf8')
-    output_file = codecs.open(output_filename, 'w', 'utf8')
+    input_file = codecs.open(input_filename, 'r', 'utf-8')
+    output_file = codecs.open(output_filename, 'w', 'utf-8')
     
     total_sentences = input_file.readline().strip()
     #output_file.write(total_sentences + '\n')
@@ -90,7 +92,7 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
         # analyze each clause in the sentence
         else:
             score = 0
-            token = '';
+            token = ''
             for word in line.split():
                 if word in pos_lexicons:
                     #print 'pos found: %s' % word
@@ -98,7 +100,7 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
                 elif word in neg_lexicons:
                     #print 'neg found: %s' % word
                     score -= 1
-            
+                
             if score > 0:
                 output_file.write('1\n')
                 token = '+'
@@ -201,12 +203,17 @@ def main():
     positive_lexicons_filepath = sys.argv[3]
     negative_lexicons_filepath = sys.argv[4]
     probability_filepath = sys.argv[5]
-    
+
     print 'Training positive and negative sentiment lexicons...'
     pos_lexicons_dict, neg_lexicons_dict = train_sentiment_lexicons(positive_lexicons_filepath, negative_lexicons_filepath)
 
     print 'Analyzing sentence sentiments from the input file...'
     analyze_sentence_sentiment(input_filepath, output_filepath, pos_lexicons_dict, neg_lexicons_dict, probability_filepath)
+
+    #for p in pos_lexicons_dict:
+    #    print 'p: %s | %s' % (p, type(p))
+
+    #print pos_lexicons_dict
 
 if __name__ == '__main__':
     main()
