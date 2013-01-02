@@ -6,9 +6,6 @@ input_data_path=data/input
 # Stanford word segmenter path
 segmenter_path=lib/stanford-segmenter-2012-11-11
 
-# Stanford POS tagger path
-pos_tagger_path=lib/stanford-postagger-full-2012-11-11
-
 # opencc config file path
 opencc_config_file_path=/usr/share/opencc/zhtw2zhcn_s.ini
 
@@ -26,7 +23,6 @@ output_path=data/output
 
 simplified_ext=.simplified
 segmented_ext=.segmented
-postag_ext=.pos_tagged
 freq_ext=.word_frequencies
 results_ext=.analysis_results
 
