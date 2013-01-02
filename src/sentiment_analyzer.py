@@ -42,7 +42,7 @@ def train_sentiment_lexicons(pos_lexicons_filename, neg_lexicons_filename):
 
 
 def filter_punctuation(text):
-    punctuations = u"。「」.,﹁﹂“”、·《》—～；？——!！\"%$'&)(+*-/.;:=<?>@[]\\_^`{}|~\#"
+    punctuations = u"。「」.,﹁﹂“”、·《》—～；：？——!！\"%$'&)(+*-/.;:=<?>@[]\\_^`{}|~\#"
     translate_table = dict((ord(char), None) for char in punctuations)
     
     return text.translate(translate_table)
@@ -81,8 +81,6 @@ def analyze_sentence_sentiment(input_filename, output_filename, pos_lexicons, ne
     for i in range(3 * int(total_sentences)):
         line = input_file.readline().strip('\n')
         line = filter_punctuation(line)
-
-        print 'line: %s' % line
 
         # write the score for whole sentences
         if (i % 3) == 2:

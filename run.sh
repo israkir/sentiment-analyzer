@@ -18,16 +18,17 @@ stopwords_file=data/stopwords.txt
 # sentiment lexicon files path
 lexicon_files_path=data/NTUSD
 
+# sentence probabilities file path
+probabilities_file_path=data/trained_sentence_probabilities
+
 # Output path
 output_path=data/output
 
 simplified_ext=.simplified
 segmented_ext=.segmented
 postag_ext=.pos_tagged
-cleaned_ext=.stopwords_cleaned
 freq_ext=.word_frequencies
 results_ext=.analysis_results
-probability_ext=.probability
 
 
 for file in $input_data_path/* ; do
@@ -51,7 +52,7 @@ for file in $input_data_path/* ; do
         -serDictionary $segmenter_path/data/dict-chris6.ser.gz > $output_path/${filename}${segmented_ext}
 
     echo '\nAnalyzing sentiments...\n\n'
-    python src/sentiment_analyzer.py ${output_path}/${filename}${segmented_ext} ${output_path}/${filename}${results_ext} ${lexicon_files_path}/Positive_simp_UTF8.txt ${lexicon_files_path}/Negtive_simp_UTF8.txt ${output_path}/${filename}${probability_ext}  
+    python src/sentiment_analyzer.py ${output_path}/${filename}${segmented_ext} ${output_path}/${filename}${results_ext} ${lexicon_files_path}/Positive_simp_UTF8.txt ${lexicon_files_path}/Negtive_simp_UTF8.txt ${probabilities_file_path} 
 
     echo '\nFinished!\n'
 
