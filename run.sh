@@ -10,7 +10,7 @@ segmenter_path=lib/stanford-segmenter-2012-11-11
 pos_tagger_path=lib/stanford-postagger-full-2012-11-11
 
 # opencc config file path
-opencc_config_file_path=/usr/lib/i386-linux-gnu/opencc/zhtw2zhcn_s.ini
+opencc_config_file_path=/usr/share/opencc/zhtw2zhcn_s.ini
 
 # stopword list path
 stopwords_file=data/stopwords.txt
@@ -36,25 +36,19 @@ for file in $input_data_path/* ; do
    
     echo '\nConverting text to Simplified Chinese...\n\n'
     # First convert everything into Simplified Chinese
-    #opencc -i $file -o $output_path/${filename}.simplified -c $opencc_config_file_path
+    opencc -i $file -o $output_path/${filename}.simplified -c $opencc_config_file_path
     
     echo '\nSegmenting sentences into word chunks...\n\n'
     # Segment the data
-    #java -mx2g -cp $segmenter_path/seg.jar edu.stanford.nlp.ie.crf.CRFClassifier \
-    #    -sighanCorporaDict $segmenter_path/data \
-    #    -testFile $output_path/${filename}${simplified_ext} \
-    #    -inputEncoding UTF-8 \
-    #    -outputEncoding UTF-8 \
-    #    -sighanPostProcessing true \
-    #    -keepAllWhitespaces false \
-    #    -loadClassifier $segmenter_path/data/ctb.gz \
-    #    -serDictionary $segmenter_path/data/dict-chris6.ser.gz > $output_path/${filename}${segmented_ext}
-
-    #echo '\nPOS tagging the words...\n\n'
-    #java -mx2g -cp $pos_tagger_path/stanford-postagger.jar: edu.stanford.nlp.tagger.maxent.MaxentTagger \
-    #    -model $pos_tagger_path/models/chinese-distsim.tagger \
-    #    -outputFormat slashTags -tagSeparator \_ \
-    #    -textFile $output_path/${filename}${segmented_ext} > $output_path/${filename}${postag_ext}
+    java -mx2g -cp $segmenter_path/seg.jar edu.stanford.nlp.ie.crf.CRFClassifier \
+        -sighanCorporaDict $segmenter_path/data \
+        -testFile $output_path/${filename}${simplified_ext} \
+        -inputEncoding UTF-8 \
+        -outputEncoding UTF-8 \
+        -sighanPostProcessing true \
+        -keepAllWhitespaces false \
+        -loadClassifier $segmenter_path/data/ctb.gz \
+        -serDictionary $segmenter_path/data/dict-chris6.ser.gz > $output_path/${filename}${segmented_ext}
 
     # Clean stopwords
     # echo '\nCleaning stopwords...\n\n'
