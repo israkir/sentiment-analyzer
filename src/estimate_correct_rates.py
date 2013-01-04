@@ -43,11 +43,11 @@ print "# of first clause polarity is correct: " + str(correctNumClause1)
 print "correctness rate for clause1 polarity: " + str(correctRateClause1)
 print
 print "# of second clause polarity is correct: " + str(correctNumClause2)
-print "correctness rate for everything together polarity: " + str(correctRateEverything)
-print
-print "# of sentence polarity is correct: " + str(correctNum)
 print "correctness rate for clause2 polarity: " + str(correctRateClause2)
 print
-print "# of first clause and second clause and sentence polarity all together are correct: " + str(correctNumEverything)
+print "# of sentence polarity is correct: " + str(correctNum)
 print "correctness rate for sentence polarity: " + str(correctRate)
+print
+print "# of first clause and second clause and sentence polarity all together are correct: " + str(correctNumEverything)
+print "correctness rate for everything together polarity: " + str(correctRateEverything)
 print
